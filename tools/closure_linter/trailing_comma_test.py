@@ -13,14 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tests for gjslint --strict.
+"""
+Tests for trailing commas (ES3) errors
 
-Tests errors that can be thrown by gjslint when in strict mode.
 """
 
-
-
-import unittest
 
 import gflags as flags
 import unittest as googletest
@@ -29,29 +26,31 @@ from closure_linter import errors
 from closure_linter import runner
 from closure_linter.common import erroraccumulator
 
-flags.FLAGS.strict = True
+flags.FLAGS.check_trailing_comma = True
+class TrailingCommaTest(googletest.TestCase):
+  """Test case to for gjslint errorrules."""
 
-
-class StrictTest(unittest.TestCase):
-  """Tests scenarios where strict generates warnings."""
-
-  def testUnclosedString(self):
-    """Tests warnings are reported when nothing is disabled.
-
-       b/11450054.
+  def testGetTrailingCommaArray(self):
+    """ warning for trailing commas before closing array
     """
-    original = [
-        'bug = function() {',
-        '  (\'foo\'\');',
-        '};',
-        '',
-        ]
+    original = ['q = [1,]', ]
 
-    expected = [errors.FILE_DOES_NOT_PARSE, errors.MULTI_LINE_STRING,
-                errors.FILE_IN_BLOCK]
-    self._AssertErrors(original, expected)
+    # Expect line too long.
+    expected = errors.COMMA_AT_END_OF_LITERAL
 
-  def _AssertErrors(self, original, expected_errors):
+    self._AssertInError(original, expected)
+
+  def testGetTrailingCommaDict(self):
+    """ warning for trailing commas before closing array
+    """
+    original = ['q = {1:1,}', ]
+
+    # Expect line too long.
+    expected = errors.COMMA_AT_END_OF_LITERAL
+
+    self._AssertInError(original, expected)
+
+  def _AssertInError(self, original, expected):
     """Asserts that the error fixer corrects original to expected."""
 
     # Trap gjslint's output parse it to get messages added.
@@ -59,10 +58,7 @@ class StrictTest(unittest.TestCase):
     runner.Run('testing.js', error_accumulator, source=original)
     error_nums = [e.code for e in error_accumulator.GetErrors()]
 
-    error_nums.sort()
-    expected_errors.sort()
-    self.assertListEqual(error_nums, expected_errors)
+    self.assertIn(expected, error_nums)
 
 if __name__ == '__main__':
   googletest.main()
-

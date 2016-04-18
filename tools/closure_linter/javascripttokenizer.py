@@ -248,9 +248,11 @@ class JavaScriptTokenizer(tokenizer.Tokenizer):
       '|'.join([
           'const',
           'enum',
+          'export',
           'extends',
           'final',
           'implements',
+          'package',
           'param',
           'private',
           'protected',

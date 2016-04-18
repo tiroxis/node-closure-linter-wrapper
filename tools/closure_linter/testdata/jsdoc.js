@@ -56,6 +56,7 @@ goog.require('goog.math.Vec2');
  * @defines // INVALID_JSDOC_TAG
  * @nginject // INVALID_JSDOC_TAG
  * @wizAction // INVALID_JSDOC_TAG
+ * @polymerbehavior // INVALID_JSDOC_TAG
  */
 function badTags() {
 }
@@ -88,6 +89,18 @@ function goodTags() {
  */
 function good(object) {
 }
+
+
+/**
+ * Some documentation goes here.
+ *
+ * @polymerBehavior
+ */
+var goodPolymerBehavior = {
+  properties: {
+    foo: String,
+  },
+};
 
 
 /**
@@ -1431,6 +1444,14 @@ Foo.prototype = {
 
 
 /** @enum {goog.events.Event<string, number>} */
+var Bar;
+
+
+/** @export {goog.events.Event<string, number>} */
+var Bar;
+
+
+/** @package {goog.events.Event<string, number>} */
 var Bar;
 
 
